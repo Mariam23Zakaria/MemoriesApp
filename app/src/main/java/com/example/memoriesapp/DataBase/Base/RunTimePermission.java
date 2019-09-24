@@ -1,22 +1,18 @@
 package com.example.memoriesapp.DataBase.Base;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.memoriesapp.DataBase.Base.BaseActvity;
-import com.example.memoriesapp.R;
-
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static com.example.memoriesapp.R.string.Ok;
-import static com.example.memoriesapp.R.string.Permisiion_Explanation;
+import static com.example.memoriesapp.R.string.Permission_Explanation;
 
 public class RunTimePermission extends BaseActvity {
 
@@ -40,7 +36,9 @@ public class RunTimePermission extends BaseActvity {
 
     public boolean IsPermissionGranted() {
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)+
+                ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE)+
+                ContextCompat.checkSelfPermission(this,CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             return false;
         }
@@ -48,13 +46,14 @@ public class RunTimePermission extends BaseActvity {
     }
 
     private void askForPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION)||
+                (ActivityCompat.shouldShowRequestPermissionRationale(this,READ_EXTERNAL_STORAGE))||
+                (ActivityCompat.shouldShowRequestPermissionRationale(this, CAMERA))) {
+
             // Show an explanation to the user *asynchronously* -- don't block
             // this thread waiting for the user's response! After the user
             // sees the explanation, try again to request the permission.
-
-            showMessage(Permisiion_Explanation, Ok, new DialogInterface.OnClickListener() {
+            showMessage(Permission_Explanation, Ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     ActivityCompat.requestPermissions(activity,
@@ -62,10 +61,11 @@ public class RunTimePermission extends BaseActvity {
                             Get_Permision_Request_Code);
                 }
             });
+
         } else {
             // No explanation needed; request the permission
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, CAMERA, READ_EXTERNAL_STORAGE},
                     Get_Permision_Request_Code);
         }
 
@@ -89,7 +89,7 @@ public class RunTimePermission extends BaseActvity {
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Toast.makeText(activity, "Sorry we can't get your access permission  ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Sorry we can't get your access permission ", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }
