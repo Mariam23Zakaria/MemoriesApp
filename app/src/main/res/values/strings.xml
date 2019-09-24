@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MemoriesApp</string>
+    <string name="Permission_Explanation">we need your permission to access this function</string>
+    <string name="Ok">OK</string>
 </resources>
